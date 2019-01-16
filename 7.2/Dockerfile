@@ -23,6 +23,7 @@ RUN docker-php-ext-install \
   gd \
   intl \
   mbstring \
+  mcrypt \
   opcache \
   pdo_mysql \
   soap \
@@ -59,6 +60,7 @@ RUN printf '* *\t* * *\tapp\t%s/usr/local/bin/php /var/www/html/bin/magento setu
 
 COPY conf/www.conf /usr/local/etc/php-fpm.d/
 COPY conf/php.ini /usr/local/etc/php/
+COPY conf/php-fpm.conf /usr/local/etc/
 COPY bin/cronstart /usr/local/bin/
 
 RUN mkdir /sock
