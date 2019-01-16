@@ -64,7 +64,8 @@ COPY conf/php.ini /usr/local/etc/php/
 #COPY conf/php-fpm.conf /usr/local/etc/
 COPY bin/cronstart /usr/local/bin/
 
-RUN chown -R app:app /usr/local/etc/php/conf.d
+RUN mkdir /sock
+RUN chown -R app:app /usr/local/etc/php/conf.d /sock
 
 USER app:app
 
