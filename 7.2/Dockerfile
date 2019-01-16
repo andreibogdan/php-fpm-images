@@ -39,7 +39,9 @@ RUN apt-get install -y libssh2-1-dev \
   && docker-php-ext-enable ssh2
 
 RUN curl -sS https://getcomposer.org/installer | \
-  php -- --install-dir=/usr/local/bin --filename=composer
+  php -- --install-dir=/usr/local/bin --filename=composer \
+  && \
+  composer global require hirak/prestissimo
 
 RUN groupadd -g 1000 app \
  && useradd -g 1000 -u 1000 -d /var/www -s /bin/bash app
@@ -57,7 +59,6 @@ RUN printf '* *\t* * *\tapp\t%s/usr/local/bin/php /var/www/html/bin/magento setu
 
 COPY conf/www.conf /usr/local/etc/php-fpm.d/
 COPY conf/php.ini /usr/local/etc/php/
-COPY conf/php-fpm.conf /usr/local/etc/
 COPY bin/cronstart /usr/local/bin/
 
 RUN mkdir /sock
