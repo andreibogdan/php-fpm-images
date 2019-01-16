@@ -39,7 +39,7 @@ RUN apt-get install -y libssh2-1-dev \
   && docker-php-ext-enable ssh2
 
 RUN curl -sS https://getcomposer.org/installer | \
-  php -- --install-dir=/usr/local/bin --filename=composer
+  php -- --install-dir=/usr/local/bin --filename=composer \
   && \
   composer global require hirak/prestissimo
 
