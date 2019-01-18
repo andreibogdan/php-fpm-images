@@ -23,7 +23,6 @@ RUN docker-php-ext-install \
   gd \
   intl \
   mbstring \
-  mcrypt \
   opcache \
   pdo_mysql \
   soap \
@@ -37,7 +36,9 @@ RUN pecl channel-update pecl.php.net \
 
 RUN apt-get install -y libssh2-1-dev \
   && pecl install ssh2-1.1.2 \
-  && docker-php-ext-enable ssh2
+  && docker-php-ext-enable ssh2 \
+  && pecl install mcrypt-1.0.1 \
+  && docker-php-ext-enable mcrypt
 
 RUN curl -sS https://getcomposer.org/installer | \
   php -- --install-dir=/usr/local/bin --filename=composer \
