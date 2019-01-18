@@ -55,9 +55,9 @@ RUN apt-get install -y gnupg \
   && chown app:app /var/www/.config /var/www/.npm \
   && ln -s /var/www/html/node_modules/grunt/bin/grunt /usr/bin/grunt
 
-RUN printf '* *\t* * *\tapp\t%s/usr/local/bin/php /var/www/html/update/cron.php\n' >> /etc/crontab
-RUN printf '* *\t* * *\tapp\t%s/usr/local/bin/php /var/www/html/bin/magento cron:run\n' >> /etc/crontab
-RUN printf '* *\t* * *\tapp\t%s/usr/local/bin/php /var/www/html/bin/magento setup:cron:run\n#\n' >> /etc/crontab
+# RUN printf '* *\t* * *\tapp\t%s/usr/local/bin/php /var/www/html/update/cron.php\n' >> /etc/crontab
+# RUN printf '* *\t* * *\tapp\t%s/usr/local/bin/php /var/www/html/bin/magento cron:run\n' >> /etc/crontab
+# RUN printf '* *\t* * *\tapp\t%s/usr/local/bin/php /var/www/html/bin/magento setup:cron:run\n#\n' >> /etc/crontab
 
 COPY conf/www.conf /usr/local/etc/php-fpm.d/
 COPY conf/php.ini /usr/local/etc/php/
