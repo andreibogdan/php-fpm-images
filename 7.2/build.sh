@@ -1,3 +1,3 @@
 #!/bin/bash
-docker build --rm -t optaros/php:7.2-fpm .
-docker push optaros/php:7.2-fpm
+docker build --rm -t optaros/php-fpm-7.2:latest .
+docker push optaros/php-fpm-7.2:latest

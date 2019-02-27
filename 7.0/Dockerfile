@@ -1,4 +1,4 @@
-FROM php:7.1-fpm
+FROM php:7.0-fpm
 
 RUN apt-get update && apt-get install -y \
   cron \
@@ -70,7 +70,7 @@ RUN chown -R app:app /usr/local/etc/php/conf.d /sock
 
 USER app:app
 
-RUN  composer global require hirak/prestissimo
+RUN composer global require hirak/prestissimo
 
 VOLUME /var/www
 
