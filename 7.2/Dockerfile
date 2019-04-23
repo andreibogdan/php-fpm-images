@@ -34,25 +34,22 @@ RUN pecl channel-update pecl.php.net \
   && docker-php-ext-enable xdebug \
   && sed -i -e 's/^zend_extension/\;zend_extension/g' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-RUN apt-get install -y libssh2-1-dev \
-  && pecl install ssh2-1.1.2 \
-  && docker-php-ext-enable ssh2 \
-  && pecl install mcrypt-1.0.1 \
-  && docker-php-ext-enable mcrypt
-
-RUN curl -sS https://getcomposer.org/installer | \
-  php -- --install-dir=/usr/local/bin --filename=composer \
-  && \
-  composer global require hirak/prestissimo
+# https://pecl.php.net/package/ssh2 -ssh2 is in alpha mode
+# RUN apt-get install -y libssh2–1-dev libssh2–1 \
+#  && pecl install ssh2 \
+#  && docker-php-ext-enable ssh2
 
 RUN groupadd -g 1000 app \
- && useradd -g 1000 -u 1000 -d /var/www -s /bin/bash app
+ && useradd -g 1000 -u 1000 -d /var/www -s /bin/bash app \
+ && curl -sS https://getcomposer.org/installer | \
+ php -- --install-dir=/usr/local/bin --filename=composer \
+ && composer global require hirak/prestissimo
 
 RUN apt-get install -y gnupg \
-  && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+  && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
   && apt-get install -y nodejs \
-  && mkdir /var/www/.config /var/www/.npm \
-  && chown app:app /var/www/.config /var/www/.npm \
+  && mkdir -p /var/www/.composer /var/www/.config /var/www/.npm \
+  && chown app:app /var/www/.config /var/www/.npm /var/www/.composer \
   && ln -s /var/www/html/node_modules/grunt/bin/grunt /usr/bin/grunt
 
 # RUN printf '* *\t* * *\tapp\t%s/usr/local/bin/php /var/www/html/update/cron.php\n' >> /etc/crontab
