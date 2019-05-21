@@ -13,7 +13,8 @@ RUN apt-get update && apt-get install -y \
   lsof \
   mysql-client \
   vim \
-  zip
+  zip \
+  wget
 
 RUN docker-php-ext-configure \
   gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
@@ -41,7 +42,10 @@ RUN pecl channel-update pecl.php.net \
 #  && docker-php-ext-enable ssh2
 
 RUN curl -sS https://getcomposer.org/installer | \
-  php -- --install-dir=/usr/local/bin --filename=composer
+  php -- --install-dir=/usr/local/bin --filename=composer \
+  && wget https://phar.phpunit.de/phpunit-6.5.phar \
+  && chmod +x phpunit-6.5.phar \
+  && mv phpunit-6.5.phar /usr/local/bin/phpunit
 
 RUN groupadd -g 1000 app \
  && useradd -g 1000 -u 1000 -d /var/www -s /bin/bash app
@@ -64,10 +68,9 @@ COPY conf/php-fpm.conf /usr/local/etc/
 COPY bin/cronstart /usr/local/bin/
 
 COPY /conf/wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh
-
-RUN mkdir /sock
-RUN chown -R app:app /usr/local/etc/php/conf.d /sock
+RUN chmod +x /wait-for-it.sh \
+    && mkdir /sock \
+    && chown -R app:app /usr/local/etc/php/conf.d /sock
 
 USER app:app
 
