@@ -13,7 +13,8 @@ RUN apt-get update && apt-get install -y \
   lsof \
   mysql-client \
   vim \
-  zip
+  zip \
+  wget
 
 RUN docker-php-ext-configure \
   gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
@@ -44,7 +45,9 @@ RUN groupadd -g 1000 app \
  && useradd -g 1000 -u 1000 -d /var/www -s /bin/bash app \
  && curl -sS https://getcomposer.org/installer | \
  php -- --install-dir=/usr/local/bin --filename=composer \
- && composer global require hirak/prestissimo
+ && wget -O phpunit https://phar.phpunit.de/phpunit-6.phar \
+ && chmod +x phpunit \
+ && mv phpunit /usr/local/bin/phpunit
 
 RUN apt-get install -y gnupg \
   && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
@@ -63,12 +66,13 @@ COPY conf/php-fpm.conf /usr/local/etc/
 COPY bin/cronstart /usr/local/bin/
 
 COPY /conf/wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh
-
-RUN mkdir /sock
-RUN chown -R app:app /usr/local/etc/php/conf.d /sock
+RUN chmod +x /wait-for-it.sh \
+  && mkdir /sock \
+  && chown -R app:app /usr/local/etc/php/conf.d /sock
 
 USER app:app
+
+RUN composer global require hirak/prestissimo
 
 VOLUME /var/www
 
