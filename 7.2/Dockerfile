@@ -29,9 +29,10 @@ RUN docker-php-ext-install \
   xsl \
   zip
 
+
 RUN pecl channel-update pecl.php.net \
-  && pecl install xdebug \
-  && docker-php-ext-enable xdebug \
+  && pecl install xdebug mcrypt-1.0.2 \
+  && docker-php-ext-enable xdebug mcrypt\
   && sed -i -e 's/^zend_extension/\;zend_extension/g' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 # https://pecl.php.net/package/ssh2 -ssh2 is in alpha mode
