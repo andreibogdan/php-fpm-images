@@ -1,5 +1,8 @@
 FROM php:7.2-fpm
 
+COPY conf/libsodium-stable /tmp
+WORKDIR /tmp
+
 RUN apt-get update && apt-get install -y \
   cron \
   git \
@@ -16,25 +19,29 @@ RUN apt-get update && apt-get install -y \
   zip \
   wget
 
-RUN docker-php-ext-configure \
-  gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
-
-RUN docker-php-ext-install \
-  bcmath \
-  gd \
-  intl \
-  mbstring \
-  opcache \
-  pdo_mysql \
-  soap \
-  xsl \
-  zip
-
+RUN ./configure
+RUN make && make check
+RUN make install
 
 RUN pecl channel-update pecl.php.net \
   && pecl install xdebug mcrypt-1.0.2 \
-  && docker-php-ext-enable xdebug mcrypt\
-  && sed -i -e 's/^zend_extension/\;zend_extension/g' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+  && pecl install libsodium \
+  && docker-php-ext-enable xdebug mcrypt \
+  && sed -i -e 's/^zend_extension/\;zend_extension/g' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+  && docker-php-ext-configure \
+  gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+  && docker-php-ext-install \
+    bcmath \
+    gd \
+    intl \
+    mbstring \
+    opcache \
+    pdo_mysql \
+    soap \
+    xsl \
+    zip
+
+
 
 # https://pecl.php.net/package/ssh2 -ssh2 is in alpha mode
 # RUN apt-get install -y libssh2–1-dev libssh2–1 \
